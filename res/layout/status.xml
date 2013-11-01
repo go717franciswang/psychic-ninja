@@ -1,8 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
 
     <TextView
         android:layout_width="fill_parent"
@@ -10,7 +11,8 @@
         android:gravity="center"
         android:textSize="30sp"
         android:layout_margin="10dp"
-        android:text="@string/titleStatus" />
+        android:text="@string/titleStatus"
+        android:textColor="@android:color/white" />
     
     <TextView 
         android:layout_width="wrap_content"
@@ -26,7 +28,8 @@
         android:layout_weight="1"
         android:hint="@string/hintText"
         android:id="@+id/editText"
-        android:gravity="top|center_horizontal"></EditText>
+        android:gravity="top|center_horizontal"
+        android:background="#cfff" ></EditText>
     
     <Button 
         android:layout_width="fill_parent"
