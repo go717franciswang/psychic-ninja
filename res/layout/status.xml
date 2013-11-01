@@ -12,6 +12,14 @@
         android:layout_margin="10dp"
         android:text="@string/titleStatus" />
     
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:id="@+id/textCount"
+        android:text="000"
+        android:layout_marginRight="10dp"/>
+    
     <EditText 
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
