@@ -15,5 +15,7 @@
     <string name="titlePrefs">Prefs</string>
     <string name="titleServiceStart">Start</string>
     <string name="titleServiceStop">Stop</string>
+    <string name="titleTimeline">Timeline</string>
+    <string name="msgSetupPrefs">Please set up preferences</string>
 
 </resources>

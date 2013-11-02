@@ -24,7 +24,6 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
 	private static final String TAG = "StatusActivity";
 	EditText editText;
 	Button updateButton;
-	Twitter twitter;
 	TextView textCount;
 	SharedPreferences prefs;
 
@@ -41,9 +40,6 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
         textCount.setText(Integer.toString(140));
         textCount.setTextColor(Color.GREEN);
         editText.addTextChangedListener(this);
-        
-        twitter = new Twitter("student", "password");
-        twitter.setAPIRootUrl("http://yamba.marakana.com/api");
     }
     
     class PostToTwitter extends AsyncTask<String, Integer, String> {
@@ -74,14 +70,11 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
     	Log.d(TAG, "onClicked");
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -99,7 +92,6 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
 		
 		return true;
 	}
-
 
 	@Override
 	public void afterTextChanged(Editable statusText) {

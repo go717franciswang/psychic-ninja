@@ -15,17 +15,23 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:name=".YambaApplication" >
-        <service android:name=".UpdaterService" />
+        
         <activity
-            android:name="com.scoobydoo.yamba.StatusActivity"
-            android:label="@string/app_name" >
+            android:name=".TimelineActivity"
+            android:label="@string/titleTimeline">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".StatusActivity"
+            android:label="@string/app_name" ></activity>
         <activity android:name="com.scoobydoo.yamba.PrefsActivity"></activity>
+        
+        <service android:name=".UpdaterService" />
     </application>
 
 </manifest>
