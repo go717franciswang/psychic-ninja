@@ -22,28 +22,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StatusActivity extends Activity implements OnClickListener, TextWatcher, OnSharedPreferenceChangeListener {
+public class StatusActivity extends Activity implements OnClickListener, TextWatcher {
 	private static final String TAG = "StatusActivity";
 	EditText editText;
 	Button updateButton;
 	Twitter twitter;
 	TextView textCount;
 	SharedPreferences prefs;
-
-    private Twitter getTwitter() {
-    	if (twitter == null) {
-    		String username, password, apiRoot;
-    		username = prefs.getString("username", "");
-    		password = prefs.getString("password", "");
-    		apiRoot = prefs.getString("apiRoot", "http://yamba.marakana.com/api");
-    		
-    		twitter = new Twitter(username, password);
-    		twitter.setAPIRootUrl(apiRoot);
-    	}
-    	
-    	return twitter;
-    }
-
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +46,6 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
         
         twitter = new Twitter("student", "password");
         twitter.setAPIRootUrl("http://yamba.marakana.com/api");
-        
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.registerOnSharedPreferenceChangeListener(this);
     }
     
     class PostToTwitter extends AsyncTask<String, Integer, String> {
@@ -71,7 +53,8 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
 		@Override
 		protected String doInBackground(String... statuses) {
 			try {
-				Twitter.Status status = getTwitter().updateStatus(statuses[0]);
+				Twitter.Status status = ((YambaApplication) getApplication())
+						.getTwitter().updateStatus(statuses[0]);
 				return status.text;
 			} catch (TwitterException e) {
 				Log.e(TAG, e.toString());
@@ -138,10 +121,5 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
 
 	@Override
 	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-	}
-	
-    @Override
-	public void onSharedPreferenceChanged(SharedPreferences arg0, String arg1) {
-		twitter = null;
 	}
 }
