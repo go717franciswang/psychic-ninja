@@ -86,7 +86,7 @@ public class YambaApplication extends Application implements
 				values.put(StatusData.C_ID, status.getId());
 				long createdAt = status.createdAt.getTime();
 				values.put(StatusData.C_CREATED_AT, createdAt);
-				//values.put(StatusData.C_SOURCE, status.source);
+				values.put(StatusData.C_SOURCE, status.source);
 				values.put(StatusData.C_TEXT, status.getText());
 				values.put(StatusData.C_USER, status.getUser().getName());
 				Log.d(TAG, "Got update with id " + status.getId() + ". Saving");

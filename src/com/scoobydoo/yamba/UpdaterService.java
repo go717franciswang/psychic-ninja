@@ -15,7 +15,6 @@ public class UpdaterService extends Service {
 
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
 		super.onCreate();
 		this.yamba = (YambaApplication) getApplication();
 		this.updater = new Updater();
@@ -25,7 +24,6 @@ public class UpdaterService extends Service {
 
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		
 		this.runFlag = false;
@@ -38,20 +36,20 @@ public class UpdaterService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		// TODO Auto-generated method stub
 		super.onStartCommand(intent, flags, startId);
 		
-		this.runFlag = true;
-		this.updater.start();
-		this.yamba.setServiceRuning(true);
-		
+		if (! this.runFlag) {
+			this.runFlag = true;
+			this.updater.start();
+			this.yamba.setServiceRuning(true);			
+		}
+				
 		Log.d(TAG, "onStarted");
 		return START_STICKY;
 	}
 
 	@Override
 	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -67,7 +65,7 @@ public class UpdaterService extends Service {
 			while (updaterService.runFlag) {
 				Log.d(TAG, "Running background thread");
 				try {
-					int newUpdates = updaterService.yamba.fetchStatusUpdates();
+					int newUpdates = ((YambaApplication) getApplication()).fetchStatusUpdates();
 					if (newUpdates > 0) {
 						Log.d(TAG, "We have a new status");
 					}
