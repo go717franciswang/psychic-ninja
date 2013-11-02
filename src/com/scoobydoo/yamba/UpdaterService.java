@@ -1,14 +1,7 @@
 package com.scoobydoo.yamba;
 
-import java.util.List;
-
-import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.TwitterException;
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -19,9 +12,6 @@ public class UpdaterService extends Service {
 	private boolean runFlag = false;
 	private Updater updater;
 	private YambaApplication yamba;
-	
-	DbHelper dbHelper;
-	SQLiteDatabase db;
 
 	@Override
 	public void onCreate() {
@@ -29,8 +19,6 @@ public class UpdaterService extends Service {
 		super.onCreate();
 		this.yamba = (YambaApplication) getApplication();
 		this.updater = new Updater();
-		
-		dbHelper = new DbHelper(this);
 		
 		Log.d(TAG, "onCreated");
 	}
@@ -68,7 +56,6 @@ public class UpdaterService extends Service {
 	}
 	
 	private class Updater extends Thread {
-		List<Twitter.Status> timeline;
 		
 		public Updater() {
 			super("UpdateService-Updater");
@@ -78,36 +65,13 @@ public class UpdaterService extends Service {
 		public void run() {
 			UpdaterService updaterService = UpdaterService.this;
 			while (updaterService.runFlag) {
-				Log.d(TAG, "Updater running");
+				Log.d(TAG, "Running background thread");
 				try {
-					// Get the timeline from the cloud
-					try {
-						timeline = yamba.getTwitter().getFriendsTimeline();
-					} catch (TwitterException e) {
-						Log.e(TAG, "Failed to connect to twitter service", e);
+					int newUpdates = updaterService.yamba.fetchStatusUpdates();
+					if (newUpdates > 0) {
+						Log.d(TAG, "We have a new status");
 					}
 					
-					db = dbHelper.getWritableDatabase();
-					
-					ContentValues values = new ContentValues();
-					for (Twitter.Status status : timeline) {
-						values.clear();
-						values.put(DbHelper.C_ID, status.id);
-						values.put(DbHelper.C_CREATED_AT, status.createdAt.getTime());
-						values.put(DbHelper.C_SOURCE, status.source);
-						values.put(DbHelper.C_TEXT, status.text);
-						values.put(DbHelper.C_USER, status.user.name);
-						
-						try {
-							db.insertOrThrow(DbHelper.TABLE, null, values);	
-							Log.d(TAG, String.format("%s: %s",  status.user.name, status.text));
-						} catch (SQLException e) {
-						}
-					}
-					
-					db.close();
-					
-					Log.d(TAG, "Updater ran");
 					Thread.sleep(DELAY);
 				} catch (InterruptedException e) {
 					updaterService.runFlag = false;
