@@ -3,6 +3,7 @@ package com.scoobydoo.yamba;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -61,6 +62,15 @@ public class StatusData {
 	
 	public void close() {
 		this.dbHelper.close();
+	}
+	
+	public void delete() {
+		SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+		try {
+			db.delete(TABLE, null, null);
+		} catch (SQLException e){
+			Log.e(TAG, "Failed to truncate table", e);
+		}
 	}
 	
 	public void insertOrIgnore(ContentValues values) {

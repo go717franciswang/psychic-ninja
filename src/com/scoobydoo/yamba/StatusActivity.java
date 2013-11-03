@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StatusActivity extends Activity implements OnClickListener, TextWatcher {
+public class StatusActivity extends BaseActivity implements OnClickListener, TextWatcher {
 	private static final String TAG = "StatusActivity";
 	EditText editText;
 	Button updateButton;
@@ -69,29 +69,6 @@ public class StatusActivity extends Activity implements OnClickListener, TextWat
     	new PostToTwitter().execute(status);
     	Log.d(TAG, "onClicked");
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.itemPrefs:
-			startActivity(new Intent(this, PrefsActivity.class));
-			break;
-		case R.id.itemServiceStart:
-			startService(new Intent(this, UpdaterService.class));
-			break;
-		case R.id.itemServiceStop:
-			stopService(new Intent(this, UpdaterService.class));
-			break;
-		}
-		
-		return true;
-	}
 
 	@Override
 	public void afterTextChanged(Editable statusText) {

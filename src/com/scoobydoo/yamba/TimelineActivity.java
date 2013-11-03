@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class TimelineActivity extends Activity {
+public class TimelineActivity extends BaseActivity {
 	StatusData statusData;
 	Cursor cursor;
 	ListView listTimeline;
@@ -49,34 +49,14 @@ public class TimelineActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		
+		this.setupList();
+	}
+	
+	private void setupList() {
 		cursor = statusData.getStatusUpdates();
 		startManagingCursor(cursor);
 		
 		adapter = new TimelineAdapter(this, cursor);
 		listTimeline.setAdapter(adapter);
-	}
-	
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.itemPrefs:
-			startActivity(new Intent(this, PrefsActivity.class));
-			break;
-		case R.id.itemServiceStart:
-			startService(new Intent(this, UpdaterService.class));
-			break;
-		case R.id.itemServiceStop:
-			stopService(new Intent(this, UpdaterService.class));
-			break;
-		}
-		
-		return true;
 	}
 }
