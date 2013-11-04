@@ -22,6 +22,8 @@ public class TimelineActivity extends BaseActivity {
 	static final int[] TO = { R.id.textCreatedAt, R.id.textUser, R.id.textText };
 	TimelineReceiver receiver;
 	IntentFilter filter;
+	static final String SEND_TIMELINE_NOTIFICATIONS = 
+			"com.scoobydoo.yamba.SEND_TIMELINE_NOTIFICATIONS";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,9 @@ public class TimelineActivity extends BaseActivity {
 		super.onResume();
 		
 		this.setupList();
-		registerReceiver(receiver, filter);
+		
+		// make sure broadcast has our permission
+		registerReceiver(receiver, filter, SEND_TIMELINE_NOTIFICATIONS, null);
 	}
 	
 	@SuppressWarnings("deprecation")

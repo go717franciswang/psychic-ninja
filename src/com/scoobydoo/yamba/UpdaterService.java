@@ -56,6 +56,8 @@ public class UpdaterService extends Service {
 	}
 	
 	private class Updater extends Thread {
+		static final String RECEIVE_TIMELINE_NOTIFICATIONS = 
+				"com.scoobydoo.yamba.RECEIVE_TIMELINE_NOTIFICATIONS";
 		
 		public Updater() {
 			super("UpdateService-Updater");
@@ -73,7 +75,9 @@ public class UpdaterService extends Service {
 						
 						Intent intent = new Intent(NEW_STATUS_INTENT);
 						intent.putExtra(NEW_STATUS_EXTRA_COUNT, newUpdates);
-						updaterService.sendBroadcast(intent);
+						
+						// make sure receiver has our permission
+						updaterService.sendBroadcast(intent, RECEIVE_TIMELINE_NOTIFICATIONS);
 					}
 					
 					Thread.sleep(DELAY);

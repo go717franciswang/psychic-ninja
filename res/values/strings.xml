@@ -19,5 +19,9 @@
     <string name="msgSetupPrefs">Please set up preferences</string>
     <string name="titlePurge">Purge</string>
     <string name="msgAllDataPurged">All data purged</string>
+    <string name="receive_timeline_notifications_permission_label">Update YAMBA timeline</string>
+    <string name="send_timeline_notifications_permission_label">Broadcast changes to YAMBA timeline</string>
+    <string name="receive_timeline_notifications_permission_description" >Update YAMBA timeline</string><string name="send_timeline_notifications_permission_description">Broadcast changes to YAMBA timeline</string>
+    
 
 </resources>
