@@ -6,6 +6,8 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class UpdaterService extends Service {
+	public static final String NEW_STATUS_INTENT = "com.scoobydoo.yamb.NEW_STATUS";
+	public static final String NEW_STATUS_EXTRA_COUNT = "NEW_STATUS_EXTRA_COUNT";
 	static final String TAG = "UpdaterService";
 	
 	static final int DELAY = 60000;
@@ -68,6 +70,10 @@ public class UpdaterService extends Service {
 					int newUpdates = ((YambaApplication) getApplication()).fetchStatusUpdates();
 					if (newUpdates > 0) {
 						Log.d(TAG, "We have a new status");
+						
+						Intent intent = new Intent(NEW_STATUS_INTENT);
+						intent.putExtra(NEW_STATUS_EXTRA_COUNT, newUpdates);
+						updaterService.sendBroadcast(intent);
 					}
 					
 					Thread.sleep(DELAY);

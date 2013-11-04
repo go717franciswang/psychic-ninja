@@ -1,12 +1,13 @@
 package com.scoobydoo.yamba;
 
-import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,6 +20,8 @@ public class TimelineActivity extends BaseActivity {
 		StatusData.C_TEXT
 	};
 	static final int[] TO = { R.id.textCreatedAt, R.id.textUser, R.id.textText };
+	TimelineReceiver receiver;
+	IntentFilter filter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,9 @@ public class TimelineActivity extends BaseActivity {
 			startActivity(new Intent(this, PrefsActivity.class));
 			Toast.makeText(this, R.string.msgSetupPrefs, Toast.LENGTH_LONG).show();
 		}
+		
+		receiver = new TimelineReceiver();
+		filter = new IntentFilter(UpdaterService.NEW_STATUS_INTENT);
 	}
 
 	@Override
@@ -42,21 +48,39 @@ public class TimelineActivity extends BaseActivity {
 		
 		statusData.close();
 	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unregisterReceiver(receiver);
+	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
 		
 		this.setupList();
+		registerReceiver(receiver, filter);
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void setupList() {
 		cursor = statusData.getStatusUpdates();
 		startManagingCursor(cursor);
 		
 		adapter = new TimelineAdapter(this, cursor);
 		listTimeline.setAdapter(adapter);
+	}
+	
+	class TimelineReceiver extends BroadcastReceiver {
+		
+		@SuppressWarnings("deprecation")
+		@Override
+		public void onReceive (Context context, Intent intent) {
+			cursor.requery();
+			adapter.notifyDataSetChanged();
+			Log.d("TimelineReceiver", "onReceived");
+		}
 	}
 }
