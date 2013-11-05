@@ -11,35 +11,42 @@ public class StatusProvider extends ContentProvider {
 	public static final Uri CONTENT_URI = Uri.
 			parse("content://com.scoobydoo.yamba.statusprovider");
 	public static final String SINGLE_RECORD_MIME_TYPE = 
-			"vnd.android.cursor.item/vnd.com.scoobydoo.yamba.status";
+			"vnd.android.cursor.item/vnd.scoobydoo.yamba.status";
 	public static final String MULTIPLE_RECORD_MIME_TYPE = 
-			"vn.android.cursor.dir/vnd.com.scoobydoo.yamba.mstatus";
+			"vnd.android.cursor.dir/vnd.scoobydoo.yamba.status";
 	StatusData statusData;
 	public static final String TAG = "StatusProvider"; 
-
-	public StatusProvider() {
-		// TODO Auto-generated constructor stub
+	
+	@Override
+	public boolean onCreate() {
+		statusData = new StatusData(getContext());
+		return true;
 	}
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		long id = this.getId(uri);
+		int count;
 		SQLiteDatabase db = statusData.dbHelper.getWritableDatabase();
 		
 		try {
 			if (id < 0) {
-				return db.delete(StatusData.TABLE, selection, selectionArgs);
+				count = db.delete(StatusData.TABLE, selection, selectionArgs);
 			} else {
-				return db.delete(StatusData.TABLE, StatusData.C_ID + "=" + id, null);
+				count = db.delete(StatusData.TABLE, StatusData.C_ID + "=" + id, null);
 			}
 		} finally {
 			db.close();
 		}
+		
+		getContext().getContentResolver().notifyChange(uri, null);
+		
+		return count;
 	}
 
 	@Override
 	public String getType(Uri uri) {
-		return getId(uri) > 0 ? MULTIPLE_RECORD_MIME_TYPE : SINGLE_RECORD_MIME_TYPE;
+		return getId(uri) < 0 ? MULTIPLE_RECORD_MIME_TYPE : SINGLE_RECORD_MIME_TYPE;
 	}
 	
 	private long getId(Uri uri) {
@@ -70,12 +77,6 @@ public class StatusProvider extends ContentProvider {
 		} finally {
 			db.close();
 		}
-	}
-
-	@Override
-	public boolean onCreate() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override

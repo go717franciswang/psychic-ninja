@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Yamba 1</string>
+    <string name="app_name">Yamba</string>
     <string name="titleStatus">Status Update</string>
     <string name="hintText">Please enter your 140-character status</string>
     <string name="buttonUpdate">Update</string>
@@ -22,6 +22,7 @@
     <string name="receive_timeline_notifications_permission_label">Update YAMBA timeline</string>
     <string name="send_timeline_notifications_permission_label">Broadcast changes to YAMBA timeline</string>
     <string name="receive_timeline_notifications_permission_description" >Update YAMBA timeline</string><string name="send_timeline_notifications_permission_description">Broadcast changes to YAMBA timeline</string>
+    <string name="msgLastTimelineUpdate">Lastest message</string>
     
 
 </resources>
