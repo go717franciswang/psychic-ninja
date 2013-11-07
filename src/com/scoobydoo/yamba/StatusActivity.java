@@ -1,9 +1,14 @@
 package com.scoobydoo.yamba;
 
+import java.security.Provider;
+
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,12 +21,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StatusActivity extends BaseActivity implements OnClickListener, TextWatcher {
+public class StatusActivity extends BaseActivity implements OnClickListener, TextWatcher, LocationListener {
 	private static final String TAG = "StatusActivity";
+	private static final long LOCATION_MIN_TIME = 3600000;
+	private static final float LOCATION_MIN_DISTANCE = 1000;
 	EditText editText;
 	Button updateButton;
 	TextView textCount;
 	SharedPreferences prefs;
+	LocationManager locationManager;
+	Location location;
+	String provider;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +47,39 @@ public class StatusActivity extends BaseActivity implements OnClickListener, Tex
         textCount.setTextColor(Color.GREEN);
         editText.addTextChangedListener(this);
     }
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		provider = ((YambaApplication) getApplication()).getProvider();
+		if (!YambaApplication.LOCATION_PROVIDER_NONE.equals(provider)) {
+			locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		}
+		
+		if (locationManager != null) {
+			location = locationManager.getLastKnownLocation(provider);
+			locationManager.requestLocationUpdates(provider, LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, this);
+		}
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		locationManager.removeUpdates(this);
+	}
     
     class PostToTwitter extends AsyncTask<String, Integer, String> {
 
 		@Override
 		protected String doInBackground(String... statuses) {
 			try {
+				if (location != null) {
+					double latlong[] = {location.getLatitude(), location.getLongitude()};
+					((YambaApplication) getApplication()).getTwitter().setMyLocation(latlong);
+				}
+				
 				Twitter.Status status = ((YambaApplication) getApplication())
 						.getTwitter().updateStatus(statuses[0]);
 				return status.text;
@@ -90,5 +127,24 @@ public class StatusActivity extends BaseActivity implements OnClickListener, Tex
 
 	@Override
 	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+	}
+	
+	public void onLocationChanged(Location location) {
+		this.location = location;
+	}
+	
+	public void onProviderDisabled(String provider) {
+		if (this.provider.equals(provider)) {
+			locationManager.removeUpdates(this);
+		}
+	}
+	
+	public void onProviderEnabled(String provider) {
+		if (this.provider.equals(provider)) {
+			locationManager.requestLocationUpdates(this.provider, LOCATION_MIN_TIME, LOCATION_MIN_DISTANCE, this);
+		}
+	}
+	
+	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 }

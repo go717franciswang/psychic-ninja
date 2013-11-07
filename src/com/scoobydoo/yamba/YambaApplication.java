@@ -18,6 +18,7 @@ public class YambaApplication extends Application implements
 	public Twitter twitter;
 	private SharedPreferences prefs;
 	private StatusData statusData;
+	public static final String LOCATION_PROVIDER_NONE = "NONE";
 	
 	@Override
 	public void onCreate() {
@@ -103,5 +104,9 @@ public class YambaApplication extends Application implements
 			Log.e(TAG, "Failed to fetch status updates", e);
 			return 0;
 		}
+	}
+	
+	public String getProvider() {
+		return prefs.getString("provider", LOCATION_PROVIDER_NONE);
 	}
 }
