@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 public class BaseActivity extends Activity {
+	YambaApplication yamba;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -68,11 +70,4 @@ public class BaseActivity extends Activity {
 		
 		return true;
 	}
-
-	YambaApplication yamba;
-
-	public BaseActivity() {
-		// TODO Auto-generated constructor stub
-	}
-
 }

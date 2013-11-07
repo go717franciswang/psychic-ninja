@@ -29,38 +29,37 @@ public class YambaWidget extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
+		
+		Cursor c = context.getContentResolver().query(StatusProvider.CONTENT_URI,
+		        null, null, null, StatusData.GET_ALL_ORDER_BY);
+		
 		try {
-			Cursor c = context.getContentResolver().query(StatusProvider.CONTENT_URI,
-			        null, null, null, null);
-			
-			try {
-				if (c.moveToFirst()) {
-					CharSequence user = c.getString(c.getColumnIndex(StatusData.C_USER));
-					CharSequence createdAt = DateUtils.getRelativeTimeSpanString(context, c
-							.getLong(c.getColumnIndex(StatusData.C_CREATED_AT)));
-					CharSequence message = c.getString(c.getColumnIndex(StatusData.C_TEXT));
-					
-					for (int appWidgetId : appWidgetIds) {
-						Log.d(TAG, "Updating widget " + appWidgetId);
-						RemoteViews views = new RemoteViews(context.getPackageName(),
-								R.layout.yamba_widget);
-						views.setTextViewText(R.id.textUser, user);
-						views.setTextViewText(R.id.textCreatedAt, createdAt);
-						views.setTextViewText(R.id.textText, message);
-						views.setOnClickPendingIntent(R.id.yamba_icon, PendingIntent
-								.getActivity(context, 0, new Intent(context, 
-										TimelineActivity.class), 0));
-						appWidgetManager.updateAppWidget(appWidgetId, views);
-					}
-				} else	{
-					Log.d(TAG, "No data to udpate");
+			if (c.moveToFirst()) {
+				CharSequence user = c.getString(c.getColumnIndex(StatusData.C_USER));
+				CharSequence createdAt = DateUtils.getRelativeTimeSpanString(context, c
+						.getLong(c.getColumnIndex(StatusData.C_CREATED_AT)));
+				CharSequence message = c.getString(c.getColumnIndex(StatusData.C_TEXT));
+				
+				for (int appWidgetId : appWidgetIds) {
+					Log.d(TAG, "Updating widget " + appWidgetId + ", with data (" + 
+							user + ", " + createdAt + ": " + message +")");
+					RemoteViews views = new RemoteViews(context.getPackageName(),
+							R.layout.yamba_widget);
+					views.setTextViewText(R.id.textUser, user);
+					views.setTextViewText(R.id.textCreatedAt, createdAt);
+					views.setTextViewText(R.id.textText, message);
+					views.setOnClickPendingIntent(R.id.yamba_icon, PendingIntent
+							.getActivity(context, 0, new Intent(context, 
+									TimelineActivity.class), 0));
+					appWidgetManager.updateAppWidget(appWidgetId, views);
+					Log.d(TAG, "Widget " + appWidgetId + " successfully updated.");
 				}
-			} finally {
-				c.close();
+			} else	{
+				Log.d(TAG, "No data to udpate");
 			}
-			Log.d(TAG, "onUpdated");
-		} catch (RuntimeException e) {
-			Log.e(TAG, "why?!?!", e);
+		} finally {
+			c.close();
 		}
+		Log.d(TAG, "onUpdated");
 	}
 }

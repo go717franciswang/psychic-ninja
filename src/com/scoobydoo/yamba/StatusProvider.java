@@ -85,11 +85,16 @@ public class StatusProvider extends ContentProvider {
 		long id = this.getId(uri);
 		SQLiteDatabase db = statusData.dbHelper.getReadableDatabase();
 		
+		Cursor c;
 		if (id < 0) {
-			return db.query(StatusData.TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+			c = db.query(StatusData.TABLE, projection, selection, selectionArgs, null, null, sortOrder);
 		} else {
-			return db.query(StatusData.TABLE, projection, StatusData.C_ID + "=" + id, null, null, null, null);
+			c = db.query(StatusData.TABLE, projection, StatusData.C_ID + "=" + id, null, null, null, null);
 		}
+		
+		c.setNotificationUri(getContext().getContentResolver(), uri);
+		
+		return c;
 	}
 
 	@Override
