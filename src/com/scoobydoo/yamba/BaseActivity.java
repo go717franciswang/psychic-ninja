@@ -24,6 +24,7 @@ public class BaseActivity extends Activity {
 		return true;
 	}
 
+	/*
 	@Override
 	public boolean onMenuOpened(int featureId, Menu menu) {
 		MenuItem toggleItem = menu.findItem(R.id.itemToggleService);
@@ -37,6 +38,7 @@ public class BaseActivity extends Activity {
 		
 		return true;
 	}
+	*/
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -46,12 +48,17 @@ public class BaseActivity extends Activity {
 			startActivity(new Intent(this, PrefsActivity.class)
 			    .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
 			break;
+			/*
 		case R.id.itemToggleService:
 			if (yamba.isServiceRunning()) {
 				stopService(new Intent(this, UpdaterService.class));	
 			} else {
 				startService(new Intent(this, UpdaterService.class));
 			}
+			break;
+			*/
+		case R.id.itemRefresh:
+			startService(new Intent(this, UpdaterService.class));
 			break;
 		case R.id.itemPurge:
 			yamba.getStatusData().delete();

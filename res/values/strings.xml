@@ -53,6 +53,7 @@
         <item>43200000</item>
         <item>86400000</item>
     </string-array>
+    <string name="titleRefresh">Refresh</string>
         
 
 </resources>

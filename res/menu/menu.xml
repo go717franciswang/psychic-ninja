@@ -4,7 +4,7 @@
     
     
     <item android:id="@+id/itemPurge" android:title="@string/titlePurge" android:icon="@android:drawable/ic_menu_delete"></item>
-    <item android:id="@+id/itemToggleService" android:title="@string/titleServiceStart" android:icon="@android:drawable/ic_media_play"></item>
+    <item android:id="@+id/itemRefresh" android:title="@string/titleRefresh" android:icon="@android:drawable/ic_menu_rotate"></item>
     
 
 </menu>
