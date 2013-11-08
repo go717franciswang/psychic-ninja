@@ -19,6 +19,7 @@ public class YambaApplication extends Application implements
 	private SharedPreferences prefs;
 	private StatusData statusData;
 	public static final String LOCATION_PROVIDER_NONE = "NONE";
+	public static final long INTERVAL_NEVER = 0;
 	
 	@Override
 	public void onCreate() {
@@ -108,5 +109,9 @@ public class YambaApplication extends Application implements
 	
 	public String getProvider() {
 		return prefs.getString("provider", LOCATION_PROVIDER_NONE);
+	}
+	
+	public long getInterval() {
+		return Long.parseLong(prefs.getString("interval", "0"));
 	}
 }
